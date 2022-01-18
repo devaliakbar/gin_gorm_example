@@ -9,29 +9,29 @@ import (
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**GET ALL BOOKS**///
+///**GET ALL EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func GetAllBooks(c *gin.Context) {
-	var books []models.Book
+func GetAllEmployee(c *gin.Context) {
+	var employees []models.Employee
 
-	models.DB.Find(&books)
+	models.DB.Model(&employees).Preload("Department").Find(&employees)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    books,
+		"data":    employees,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**CREATE BOOK**///
+///**CREATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type CreateBookInput struct {
-	Title  string `json:"title" binding:"required"`
-	Author string `json:"author" binding:"required"`
+type CreateEmployeeInput struct {
+	Name         string `json:"name" binding:"required"`
+	DepartmentId int    `json:"department_id"`
 }
 
-func CreateBook(c *gin.Context) {
-	var input CreateBookInput
+func CreateEmployee(c *gin.Context) {
+	var input CreateEmployeeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -42,22 +42,33 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	book := models.Book{Title: input.Title, Author: input.Author}
-	models.DB.Create(&book)
+	var department models.Department
+
+	if err := models.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Department not found!",
+		})
+
+		return
+	}
+
+	employee := models.Employee{Name: input.Name, Department: department}
+	models.DB.Create(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    book,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**GET BOOK**///
+///**GET EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func GetBook(c *gin.Context) {
-	var book models.Book
+func GetEmployee(c *gin.Context) {
+	var employee models.Employee
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -68,21 +79,21 @@ func GetBook(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    book,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**UPDATE BOOK**///
+///**UPDATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type UpdateBookInput struct {
-	Title  string `json:"title"`
-	Author string `json:"author"`
+type UpdateEmployeeInput struct {
+	Name         string `json:"name"`
+	DepartmentId int    `json:"department_id"`
 }
 
-func UpdateBook(c *gin.Context) {
-	var book models.Book
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+func UpdateEmployee(c *gin.Context) {
+	var employee models.Employee
+	if err := models.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -92,7 +103,7 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	var input UpdateBookInput
+	var input UpdateEmployeeInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -102,23 +113,40 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	//	models.DB.Model(&book).Updates(input)
+	if input.Name != "" {
+		employee.Name = input.Name
+	}
 
-	models.DB.Model(&book).Updates(map[string]interface{}{"title": input.Title, "author": input.Author})
+	if input.DepartmentId != 0 {
+		var department models.Department
+
+		if err := models.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"error":   "Department not found!",
+			})
+
+			return
+		}
+
+		employee.Department = department
+	}
+
+	models.DB.Save(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    book,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**DELETE BOOK**///
+///**DELETE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func DeleteBook(c *gin.Context) {
-	var book models.Book
+func DeleteEmployee(c *gin.Context) {
+	var employee models.Employee
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -127,10 +155,10 @@ func DeleteBook(c *gin.Context) {
 		return
 	}
 
-	models.DB.Delete(&book)
+	models.DB.Delete(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    book,
+		"data":    employee,
 	})
 }

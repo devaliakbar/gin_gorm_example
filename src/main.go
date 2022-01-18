@@ -12,15 +12,27 @@ func main() {
 
 	models.ConnectToDb()
 
-	r.GET("/books", controller.GetAllBooks)
+	r.GET("/departments", controller.GetAllDepartment)
 
-	r.POST("/book", controller.CreateBook)
+	r.POST("/department", controller.CreateDepartment)
 
-	r.GET("/book/:id", controller.GetBook)
+	r.GET("/department/:id", controller.GetDepartment)
 
-	r.PATCH("/book/:id", controller.UpdateBook)
+	r.PATCH("/department/:id", controller.UpdateDepartment)
 
-	r.DELETE("/book/:id", controller.DeleteBook)
+	r.DELETE("/department/:id", controller.DeleteDepartment)
+
+	////
+
+	r.GET("/employees", controller.GetAllEmployee)
+
+	r.POST("/employee", controller.CreateEmployee)
+
+	r.GET("/employee/:id", controller.GetEmployee)
+
+	r.PATCH("/employee/:id", controller.UpdateEmployee)
+
+	r.DELETE("/employee/:id", controller.DeleteEmployee)
 
 	r.Run("localhost:8080")
 }
