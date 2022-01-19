@@ -12,9 +12,18 @@ import (
 ///**GET ALL EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func GetAllEmployee(c *gin.Context) {
-	var employees []models.Employee
+	type EmployeeSelection struct {
+		EmployeeId         string `json:"employee_id"`
+		EmployeeName       string `json:"employee_name"`
+		EmployeeDepartment string `json:"employee_department"`
+	}
 
-	models.DB.Model(&employees).Preload("Department").Find(&employees)
+	var employees []EmployeeSelection
+
+	models.DB.Table("employees").
+		Joins("inner join departments on departments.id = employees.id").
+		Select("employees.id as employee_id, employees.name as employee_name, departments.name as employee_department").
+		Find(&employees)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
