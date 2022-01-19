@@ -15,27 +15,9 @@ func main() {
 
 	r.Use(middleware.Logger())
 
-	r.GET("/departments", controller.GetAllDepartment)
+	controller.InitDepartmentRoutes(r)
 
-	r.POST("/department", controller.CreateDepartment)
-
-	r.GET("/department/:id", controller.GetDepartment)
-
-	r.PATCH("/department/:id", controller.UpdateDepartment)
-
-	r.DELETE("/department/:id", controller.DeleteDepartment)
-
-	////
-
-	r.GET("/employees", controller.GetAllEmployee)
-
-	r.POST("/employee", controller.CreateEmployee)
-
-	r.GET("/employee/:id", controller.GetEmployee)
-
-	r.PATCH("/employee/:id", controller.UpdateEmployee)
-
-	r.DELETE("/employee/:id", controller.DeleteEmployee)
+	controller.InitEmployeeRoutes(r)
 
 	r.Run("localhost:8080")
 }

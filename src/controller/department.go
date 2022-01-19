@@ -8,6 +8,18 @@ import (
 	"github.com/devaliakbar/gin_gorm_example/src/models"
 )
 
+func InitDepartmentRoutes(r *gin.Engine) {
+	r.GET("/departments", GetAllDepartment)
+
+	r.POST("/department", CreateDepartment)
+
+	r.GET("/department/:id", GetDepartment)
+
+	r.PATCH("/department/:id", UpdateDepartment)
+
+	r.DELETE("/department/:id", DeleteDepartment)
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**GET ALL DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
