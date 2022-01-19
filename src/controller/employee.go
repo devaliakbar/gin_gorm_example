@@ -68,7 +68,7 @@ func CreateEmployee(c *gin.Context) {
 func GetEmployee(c *gin.Context) {
 	var employee models.Employee
 
-	if err := models.DB.Joins("Department").First(&employee, "employees.id = ?", c.Param("id")).Error; err != nil {
+	if err := models.DB.Preload("Department").First(&employee, "id = ?", c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
