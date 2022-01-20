@@ -1,4 +1,4 @@
-package models
+package departmentModels
 
 type Department struct {
 	ID   uint   `json:"id" gorm:"primary_key"`

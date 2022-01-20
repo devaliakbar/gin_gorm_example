@@ -1,12 +1,13 @@
-package controller
+package employeeControllers
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/devaliakbar/gin_gorm_example/src/database"
-	"github.com/devaliakbar/gin_gorm_example/src/models"
+	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
+	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/models"
+	employeeModels "github.com/devaliakbar/gin_gorm_example/lib/features/employee/models"
 )
 
 func InitEmployeeRoutes(r *gin.Engine) {
@@ -64,7 +65,7 @@ func CreateEmployee(c *gin.Context) {
 		return
 	}
 
-	var department models.Department
+	var department departmentModels.Department
 
 	if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -75,7 +76,7 @@ func CreateEmployee(c *gin.Context) {
 		return
 	}
 
-	employee := models.Employee{Name: input.Name, Department: department}
+	employee := employeeModels.Employee{Name: input.Name, Department: department}
 	database.DB.Create(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -88,7 +89,7 @@ func CreateEmployee(c *gin.Context) {
 ///**GET EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func GetEmployee(c *gin.Context) {
-	var employee models.Employee
+	var employee employeeModels.Employee
 
 	if err := database.DB.Preload("Department").First(&employee, "id = ?", c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -114,7 +115,7 @@ type UpdateEmployeeInput struct {
 }
 
 func UpdateEmployee(c *gin.Context) {
-	var employee models.Employee
+	var employee employeeModels.Employee
 	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -140,7 +141,7 @@ func UpdateEmployee(c *gin.Context) {
 	}
 
 	if input.DepartmentId != 0 {
-		var department models.Department
+		var department departmentModels.Department
 
 		if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -166,7 +167,7 @@ func UpdateEmployee(c *gin.Context) {
 ///**DELETE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func DeleteEmployee(c *gin.Context) {
-	var employee models.Employee
+	var employee employeeModels.Employee
 
 	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
