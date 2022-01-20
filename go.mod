@@ -3,7 +3,9 @@ module github.com/devaliakbar/gin_gorm_example
 go 1.17
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
+	github.com/joho/godotenv v1.4.0
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.5
 )
