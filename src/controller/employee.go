@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/devaliakbar/gin_gorm_example/src/database"
 	"github.com/devaliakbar/gin_gorm_example/src/models"
 )
 
@@ -32,7 +33,7 @@ func GetAllEmployee(c *gin.Context) {
 
 	var employees []EmployeeSelection
 
-	models.DB.Table("employees").
+	database.DB.Table("employees").
 		Joins("inner join departments on departments.id = employees.id").
 		Select("employees.id as employee_id, employees.name as employee_name, departments.name as employee_department").
 		Find(&employees)
@@ -65,7 +66,7 @@ func CreateEmployee(c *gin.Context) {
 
 	var department models.Department
 
-	if err := models.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+	if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Department not found!",
@@ -75,7 +76,7 @@ func CreateEmployee(c *gin.Context) {
 	}
 
 	employee := models.Employee{Name: input.Name, Department: department}
-	models.DB.Create(&employee)
+	database.DB.Create(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -89,7 +90,7 @@ func CreateEmployee(c *gin.Context) {
 func GetEmployee(c *gin.Context) {
 	var employee models.Employee
 
-	if err := models.DB.Preload("Department").First(&employee, "id = ?", c.Param("id")).Error; err != nil {
+	if err := database.DB.Preload("Department").First(&employee, "id = ?", c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -114,7 +115,7 @@ type UpdateEmployeeInput struct {
 
 func UpdateEmployee(c *gin.Context) {
 	var employee models.Employee
-	if err := models.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -141,7 +142,7 @@ func UpdateEmployee(c *gin.Context) {
 	if input.DepartmentId != 0 {
 		var department models.Department
 
-		if err := models.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+		if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"success": false,
 				"error":   "Department not found!",
@@ -153,7 +154,7 @@ func UpdateEmployee(c *gin.Context) {
 		employee.Department = department
 	}
 
-	models.DB.Save(&employee)
+	database.DB.Save(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -167,7 +168,7 @@ func UpdateEmployee(c *gin.Context) {
 func DeleteEmployee(c *gin.Context) {
 	var employee models.Employee
 
-	if err := models.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -176,7 +177,7 @@ func DeleteEmployee(c *gin.Context) {
 		return
 	}
 
-	models.DB.Delete(&employee)
+	database.DB.Delete(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

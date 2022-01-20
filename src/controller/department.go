@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/devaliakbar/gin_gorm_example/src/database"
 	"github.com/devaliakbar/gin_gorm_example/src/models"
 )
 
@@ -26,7 +27,7 @@ func InitDepartmentRoutes(r *gin.Engine) {
 func GetAllDepartment(c *gin.Context) {
 	var departments []models.Department
 
-	models.DB.Find(&departments)
+	database.DB.Find(&departments)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -54,7 +55,7 @@ func CreateDepartment(c *gin.Context) {
 	}
 
 	department := models.Department{Name: input.Name}
-	models.DB.Create(&department)
+	database.DB.Create(&department)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -68,7 +69,7 @@ func CreateDepartment(c *gin.Context) {
 func GetDepartment(c *gin.Context) {
 	var department models.Department
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -92,7 +93,7 @@ type UpdateDepartmentInput struct {
 
 func UpdateDepartment(c *gin.Context) {
 	var department models.Department
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -119,7 +120,7 @@ func UpdateDepartment(c *gin.Context) {
 		updateBody["name"] = input.Name
 	}
 
-	models.DB.Model(&department).Updates(updateBody)
+	database.DB.Model(&department).Updates(updateBody)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -133,7 +134,7 @@ func UpdateDepartment(c *gin.Context) {
 func DeleteDepartment(c *gin.Context) {
 	var department models.Department
 
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -142,7 +143,7 @@ func DeleteDepartment(c *gin.Context) {
 		return
 	}
 
-	models.DB.Delete(&department)
+	database.DB.Delete(&department)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

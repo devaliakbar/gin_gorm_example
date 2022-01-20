@@ -11,7 +11,7 @@ func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
 
-		c.Set("example", "123456")
+		c.Header("Content-Type", "application/json")
 
 		c.Next()
 
