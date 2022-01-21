@@ -3,17 +3,20 @@ package department
 import (
 	"github.com/gin-gonic/gin"
 
-	departmentControllers "github.com/devaliakbar/gin_gorm_example/lib/features/department/controllers"
+	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
 )
 
-func InitRoutes(r *gin.Engine) {
-	r.GET("/departments", departmentControllers.GetAllDepartment)
+func InitDepartment(r *gin.Engine) {
 
-	r.POST("/department", departmentControllers.CreateDepartment)
+	database.DB.AutoMigrate(&Department{})
 
-	r.GET("/department/:id", departmentControllers.GetDepartment)
+	r.GET("/departments", getAllDepartment)
 
-	r.PATCH("/department/:id", departmentControllers.UpdateDepartment)
+	r.POST("/department", createDepartment)
 
-	r.DELETE("/department/:id", departmentControllers.DeleteDepartment)
+	r.GET("/department/:id", getDepartment)
+
+	r.PATCH("/department/:id", updateDepartment)
+
+	r.DELETE("/department/:id", deleteDepartment)
 }

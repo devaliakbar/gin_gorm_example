@@ -17,8 +17,8 @@ func RunServer() {
 
 	r.Use(middleware.Logger())
 
-	department.InitRoutes(r)
-	employee.InitRoutes(r)
+	department.InitDepartment(r)
+	employee.InitEmployee(r)
 
 	r.Run("localhost:8080")
 }

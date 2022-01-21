@@ -3,19 +3,20 @@ package employee
 import (
 	"github.com/gin-gonic/gin"
 
-	employeeControllers "github.com/devaliakbar/gin_gorm_example/lib/features/employee/controllers"
+	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
 )
 
-func InitRoutes(r *gin.Engine) {
+func InitEmployee(r *gin.Engine) {
+	database.DB.AutoMigrate(&Employee{})
 
-	r.GET("/employees", employeeControllers.GetAllEmployee)
+	r.GET("/employees", getAllEmployee)
 
-	r.POST("/employee", employeeControllers.CreateEmployee)
+	r.POST("/employee", createEmployee)
 
-	r.GET("/employee/:id", employeeControllers.GetEmployee)
+	r.GET("/employee/:id", getEmployee)
 
-	r.PATCH("/employee/:id", employeeControllers.UpdateEmployee)
+	r.PATCH("/employee/:id", updateEmployee)
 
-	r.DELETE("/employee/:id", employeeControllers.DeleteEmployee)
+	r.DELETE("/employee/:id", deleteEmployee)
 
 }

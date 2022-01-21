@@ -1,4 +1,4 @@
-package departmentControllers
+package department
 
 import (
 	"net/http"
@@ -6,14 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
-	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/department/models"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**GET ALL DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func GetAllDepartment(c *gin.Context) {
-	var departments []departmentModels.Department
+func getAllDepartment(c *gin.Context) {
+	var departments []Department
 
 	database.DB.Find(&departments)
 
@@ -30,7 +29,7 @@ type CreateDepartmentInput struct {
 	Name string `json:"name" binding:"required"`
 }
 
-func CreateDepartment(c *gin.Context) {
+func createDepartment(c *gin.Context) {
 	var input CreateDepartmentInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -42,7 +41,7 @@ func CreateDepartment(c *gin.Context) {
 		return
 	}
 
-	department := departmentModels.Department{Name: input.Name}
+	department := Department{Name: input.Name}
 	database.DB.Create(&department)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -54,8 +53,8 @@ func CreateDepartment(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**GET DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func GetDepartment(c *gin.Context) {
-	var department departmentModels.Department
+func getDepartment(c *gin.Context) {
+	var department Department
 
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -79,8 +78,8 @@ type UpdateDepartmentInput struct {
 	Name string `json:"name"`
 }
 
-func UpdateDepartment(c *gin.Context) {
-	var department departmentModels.Department
+func updateDepartment(c *gin.Context) {
+	var department Department
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -119,8 +118,8 @@ func UpdateDepartment(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**DELETE DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func DeleteDepartment(c *gin.Context) {
-	var department departmentModels.Department
+func deleteDepartment(c *gin.Context) {
+	var department Department
 
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
