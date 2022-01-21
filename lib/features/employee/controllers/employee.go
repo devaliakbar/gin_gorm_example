@@ -6,21 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
-	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/models"
+	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/department/models"
 	employeeModels "github.com/devaliakbar/gin_gorm_example/lib/features/employee/models"
 )
-
-func InitEmployeeRoutes(r *gin.Engine) {
-	r.GET("/employees", GetAllEmployee)
-
-	r.POST("/employee", CreateEmployee)
-
-	r.GET("/employee/:id", GetEmployee)
-
-	r.PATCH("/employee/:id", UpdateEmployee)
-
-	r.DELETE("/employee/:id", DeleteEmployee)
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**GET ALL EMPLOYEE**///

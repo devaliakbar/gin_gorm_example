@@ -5,8 +5,8 @@ import (
 	"github.com/devaliakbar/gin_gorm_example/lib/core/middleware"
 	"github.com/gin-gonic/gin"
 
-	departmentControllers "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/controllers"
-	employeeControllers "github.com/devaliakbar/gin_gorm_example/lib/features/employee/controllers"
+	"github.com/devaliakbar/gin_gorm_example/lib/features/department"
+	"github.com/devaliakbar/gin_gorm_example/lib/features/employee"
 )
 
 func RunServer() {
@@ -17,8 +17,8 @@ func RunServer() {
 
 	r.Use(middleware.Logger())
 
-	departmentControllers.InitDepartmentRoutes(r)
-	employeeControllers.InitEmployeeRoutes(r)
+	department.InitRoutes(r)
+	employee.InitRoutes(r)
 
 	r.Run("localhost:8080")
 }

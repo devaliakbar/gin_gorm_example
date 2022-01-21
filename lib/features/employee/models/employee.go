@@ -1,6 +1,6 @@
 package employeeModels
 
-import departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/models"
+import departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/department/models"
 
 type Employee struct {
 	ID           uint   `json:"id" gorm:"primary_key"`

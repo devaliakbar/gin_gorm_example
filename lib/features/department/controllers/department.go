@@ -6,20 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
-	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/models"
+	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/department/models"
 )
-
-func InitDepartmentRoutes(r *gin.Engine) {
-	r.GET("/departments", GetAllDepartment)
-
-	r.POST("/department", CreateDepartment)
-
-	r.GET("/department/:id", GetDepartment)
-
-	r.PATCH("/department/:id", UpdateDepartment)
-
-	r.DELETE("/department/:id", DeleteDepartment)
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**GET ALL DEPARTMENT**///

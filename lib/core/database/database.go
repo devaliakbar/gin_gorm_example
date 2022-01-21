@@ -1,7 +1,7 @@
 package database
 
 import (
-	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/deparment/models"
+	departmentModels "github.com/devaliakbar/gin_gorm_example/lib/features/department/models"
 	employeeModels "github.com/devaliakbar/gin_gorm_example/lib/features/employee/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
