@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/devaliakbar/gin_gorm_example/lib/core/database"
-	"github.com/devaliakbar/gin_gorm_example/lib/features/department"
+	"github.com/devaliakbar/gin_gorm_example/internal/core/database"
+	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
 )
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
