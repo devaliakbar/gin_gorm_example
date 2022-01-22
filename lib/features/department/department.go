@@ -7,7 +7,6 @@ import (
 )
 
 func InitDepartment(r *gin.Engine) {
-
 	database.DB.AutoMigrate(&Department{})
 
 	r.GET("/departments", getAllDepartment)

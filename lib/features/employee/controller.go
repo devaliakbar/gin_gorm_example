@@ -13,13 +13,7 @@ import (
 ///**GET ALL EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func getAllEmployee(c *gin.Context) {
-	type EmployeeSelection struct {
-		EmployeeId         string `json:"employee_id"`
-		EmployeeName       string `json:"employee_name"`
-		EmployeeDepartment string `json:"employee_department"`
-	}
-
-	var employees []EmployeeSelection
+	var employees []employeeSelection
 
 	database.DB.Table("employees").
 		Joins("inner join departments on departments.id = employees.id").
@@ -35,13 +29,8 @@ func getAllEmployee(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**CREATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type CreateEmployeeInput struct {
-	Name         string `json:"name" binding:"required"`
-	DepartmentId int    `json:"department_id"`
-}
-
 func createEmployee(c *gin.Context) {
-	var input CreateEmployeeInput
+	var input createEmployeeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -96,11 +85,6 @@ func getEmployee(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**UPDATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type UpdateEmployeeInput struct {
-	Name         string `json:"name"`
-	DepartmentId int    `json:"department_id"`
-}
-
 func updateEmployee(c *gin.Context) {
 	var employee Employee
 	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
@@ -113,7 +97,7 @@ func updateEmployee(c *gin.Context) {
 		return
 	}
 
-	var input UpdateEmployeeInput
+	var input updateEmployeeInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,

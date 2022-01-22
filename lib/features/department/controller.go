@@ -25,12 +25,8 @@ func getAllDepartment(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**CREATE DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type CreateDepartmentInput struct {
-	Name string `json:"name" binding:"required"`
-}
-
 func createDepartment(c *gin.Context) {
-	var input CreateDepartmentInput
+	var input createDepartmentInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -74,10 +70,6 @@ func getDepartment(c *gin.Context) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///**UPDATE DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-type UpdateDepartmentInput struct {
-	Name string `json:"name"`
-}
-
 func updateDepartment(c *gin.Context) {
 	var department Department
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
@@ -90,7 +82,7 @@ func updateDepartment(c *gin.Context) {
 		return
 	}
 
-	var input UpdateDepartmentInput
+	var input updateDepartmentInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -99,8 +91,6 @@ func updateDepartment(c *gin.Context) {
 
 		return
 	}
-
-	//models.DB.Model(&department).Updates(input)
 
 	updateBody := map[string]interface{}{}
 	if input.Name != "" {
