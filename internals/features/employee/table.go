@@ -1,7 +1,7 @@
 package employee
 
 import (
-	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
+	"github.com/devaliakbar/gin_gorm_example/internals/features/department"
 )
 
 type Employee struct {
