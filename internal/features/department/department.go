@@ -3,7 +3,7 @@ package department
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/devaliakbar/gin_gorm_example/internals/core/database"
+	"github.com/devaliakbar/gin_gorm_example/internal/core/database"
 )
 
 func InitDepartment(r *gin.Engine) {

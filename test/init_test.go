@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	unitTest "github.com/Valiben/gin_unit_test"
-	"github.com/devaliakbar/gin_gorm_example/internals/core/database"
-	"github.com/devaliakbar/gin_gorm_example/internals/features/department"
-	"github.com/devaliakbar/gin_gorm_example/internals/features/employee"
+	"github.com/devaliakbar/gin_gorm_example/internal/core/database"
+	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
+	"github.com/devaliakbar/gin_gorm_example/internal/features/employee"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

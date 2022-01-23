@@ -5,7 +5,7 @@ import (
 
 	unitTest "github.com/Valiben/gin_unit_test"
 	"github.com/Valiben/gin_unit_test/utils"
-	"github.com/devaliakbar/gin_gorm_example/internals/features/department"
+	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
 )
 
 func TestCreateDepartment(t *testing.T) {

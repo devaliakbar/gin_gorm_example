@@ -1,34 +1,38 @@
-package department
+package employee
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/devaliakbar/gin_gorm_example/internals/core/database"
+	"github.com/devaliakbar/gin_gorm_example/internal/core/database"
+	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
 )
 
-type DepartmentController struct{}
+type EmployeeController struct{}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**GET ALL DEPARTMENT**///
+///**GET ALL EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (DepartmentController) getAllDepartment(c *gin.Context) {
-	var departments []Department
+func (EmployeeController) getAllEmployee(c *gin.Context) {
+	var employees []EmployeeSelection
 
-	database.DB.Find(&departments)
+	database.DB.Table("employees").
+		Joins("inner join departments on departments.id = employees.id").
+		Select("employees.id as employee_id, employees.name as employee_name, departments.name as employee_department").
+		Find(&employees)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    departments,
+		"data":    employees,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**CREATE DEPARTMENT**///
+///**CREATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (DepartmentController) createDepartment(c *gin.Context) {
-	var input CreateDepartmentInput
+func (EmployeeController) createEmployee(c *gin.Context) {
+	var input CreateEmployeeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -39,22 +43,33 @@ func (DepartmentController) createDepartment(c *gin.Context) {
 		return
 	}
 
-	department := Department{Name: input.Name}
-	database.DB.Create(&department)
+	var department department.Department
+
+	if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   "Department not found!",
+		})
+
+		return
+	}
+
+	employee := Employee{Name: input.Name, Department: department}
+	database.DB.Create(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    department,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**GET DEPARTMENT**///
+///**GET EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (DepartmentController) getDepartment(c *gin.Context) {
-	var department Department
+func (EmployeeController) getEmployee(c *gin.Context) {
+	var employee Employee
 
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+	if err := database.DB.Preload("Department").First(&employee, "id = ?", c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -65,16 +80,16 @@ func (DepartmentController) getDepartment(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    department,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**UPDATE DEPARTMENT**///
+///**UPDATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (DepartmentController) updateDepartment(c *gin.Context) {
-	var department Department
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+func (EmployeeController) updateEmployee(c *gin.Context) {
+	var employee Employee
+	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -84,7 +99,7 @@ func (DepartmentController) updateDepartment(c *gin.Context) {
 		return
 	}
 
-	var input UpdateDepartmentInput
+	var input UpdateEmployeeInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -94,26 +109,40 @@ func (DepartmentController) updateDepartment(c *gin.Context) {
 		return
 	}
 
-	updateBody := map[string]interface{}{}
 	if input.Name != "" {
-		updateBody["name"] = input.Name
+		employee.Name = input.Name
 	}
 
-	database.DB.Model(&department).Updates(updateBody)
+	if input.DepartmentId != 0 {
+		var department department.Department
+
+		if err := database.DB.Where("id = ?", input.DepartmentId).First(&department).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"success": false,
+				"error":   "Department not found!",
+			})
+
+			return
+		}
+
+		employee.Department = department
+	}
+
+	database.DB.Save(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    department,
+		"data":    employee,
 	})
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**DELETE DEPARTMENT**///
+///**DELETE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func (DepartmentController) deleteDepartment(c *gin.Context) {
-	var department Department
+func (EmployeeController) deleteEmployee(c *gin.Context) {
+	var employee Employee
 
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&department).Error; err != nil {
+	if err := database.DB.Where("id = ?", c.Param("id")).Preload("Department").First(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   "Record not found!",
@@ -122,10 +151,10 @@ func (DepartmentController) deleteDepartment(c *gin.Context) {
 		return
 	}
 
-	database.DB.Delete(&department)
+	database.DB.Delete(&employee)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data":    department,
+		"data":    employee,
 	})
 }
