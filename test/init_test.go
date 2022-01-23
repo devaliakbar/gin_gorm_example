@@ -1,7 +1,7 @@
 package test
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"testing"
 
@@ -22,7 +22,9 @@ func TestMain(m *testing.M) {
 }
 
 func setUp() {
-	fmt.Println("<<<Test Started>>>")
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+
+	log.Println("<<<Test Started>>>")
 
 	db, err := gorm.Open(sqlite.Open("testdb.db"), &gorm.Config{})
 
@@ -43,5 +45,5 @@ func shutDown() {
 	///DROP ALL TABLES
 	database.DB.Migrator().DropTable(&department.Department{}, employee.Employee{})
 
-	fmt.Println("<<<Test End>>>")
+	log.Println("<<<Test End>>>")
 }
