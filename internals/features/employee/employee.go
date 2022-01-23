@@ -9,14 +9,16 @@ import (
 func InitEmployee(r *gin.Engine) {
 	database.DB.AutoMigrate(&Employee{})
 
-	r.GET("/employees", getAllEmployee)
+	employeeController := EmployeeController{}
 
-	r.POST("/employee", createEmployee)
+	r.GET("/employees", employeeController.getAllEmployee)
 
-	r.GET("/employee/:id", getEmployee)
+	r.POST("/employee", employeeController.createEmployee)
 
-	r.PATCH("/employee/:id", updateEmployee)
+	r.GET("/employee/:id", employeeController.getEmployee)
 
-	r.DELETE("/employee/:id", deleteEmployee)
+	r.PATCH("/employee/:id", employeeController.updateEmployee)
+
+	r.DELETE("/employee/:id", employeeController.deleteEmployee)
 
 }

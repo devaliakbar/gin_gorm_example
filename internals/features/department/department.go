@@ -9,13 +9,15 @@ import (
 func InitDepartment(r *gin.Engine) {
 	database.DB.AutoMigrate(&Department{})
 
-	r.GET("/departments", getAllDepartment)
+	departmentController := DepartmentController{}
 
-	r.POST("/department", createDepartment)
+	r.GET("/departments", departmentController.getAllDepartment)
 
-	r.GET("/department/:id", getDepartment)
+	r.POST("/department", departmentController.createDepartment)
 
-	r.PATCH("/department/:id", updateDepartment)
+	r.GET("/department/:id", departmentController.getDepartment)
 
-	r.DELETE("/department/:id", deleteDepartment)
+	r.PATCH("/department/:id", departmentController.updateDepartment)
+
+	r.DELETE("/department/:id", departmentController.deleteDepartment)
 }
