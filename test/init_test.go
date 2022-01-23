@@ -40,5 +40,8 @@ func setUp() {
 }
 
 func shutDown() {
+	///DROP ALL TABLES
+	database.DB.Migrator().DropTable(&department.Department{}, employee.Employee{})
+
 	fmt.Println("<<<Test End>>>")
 }
