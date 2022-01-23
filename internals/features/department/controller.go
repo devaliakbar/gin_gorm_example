@@ -28,7 +28,7 @@ func (DepartmentController) getAllDepartment(c *gin.Context) {
 ///**CREATE DEPARTMENT**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func (DepartmentController) createDepartment(c *gin.Context) {
-	var input createDepartmentInput
+	var input CreateDepartmentInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -84,7 +84,7 @@ func (DepartmentController) updateDepartment(c *gin.Context) {
 		return
 	}
 
-	var input updateDepartmentInput
+	var input UpdateDepartmentInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,

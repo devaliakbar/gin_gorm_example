@@ -15,7 +15,7 @@ type EmployeeController struct{}
 ///**GET ALL EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func (EmployeeController) getAllEmployee(c *gin.Context) {
-	var employees []employeeSelection
+	var employees []EmployeeSelection
 
 	database.DB.Table("employees").
 		Joins("inner join departments on departments.id = employees.id").
@@ -32,7 +32,7 @@ func (EmployeeController) getAllEmployee(c *gin.Context) {
 ///**CREATE EMPLOYEE**///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func (EmployeeController) createEmployee(c *gin.Context) {
-	var input createEmployeeInput
+	var input CreateEmployeeInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -99,7 +99,7 @@ func (EmployeeController) updateEmployee(c *gin.Context) {
 		return
 	}
 
-	var input updateEmployeeInput
+	var input UpdateEmployeeInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,

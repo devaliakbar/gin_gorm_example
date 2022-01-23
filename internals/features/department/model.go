@@ -1,9 +1,9 @@
 package department
 
-type createDepartmentInput struct {
+type CreateDepartmentInput struct {
 	Name string `json:"name" binding:"required"`
 }
 
-type updateDepartmentInput struct {
+type UpdateDepartmentInput struct {
 	Name string `json:"name"`
 }
