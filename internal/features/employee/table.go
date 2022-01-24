@@ -7,6 +7,6 @@ import (
 type Employee struct {
 	ID           uint   `json:"id" gorm:"primary_key"`
 	Name         string `json:"name" gorm:"not null"`
-	DepartmentId uint
+	DepartmentId uint   `json:"department_id" gorm:"not null"`
 	Department   department.Department
 }

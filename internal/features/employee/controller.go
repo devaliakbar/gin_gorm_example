@@ -18,7 +18,7 @@ func (EmployeeController) getAllEmployee(c *gin.Context) {
 	var employees []EmployeeSelection
 
 	database.DB.Table("employees").
-		Joins("inner join departments on departments.id = employees.id").
+		Joins("inner join departments on departments.id = employees.department_id").
 		Select("employees.id as employee_id, employees.name as employee_name, departments.name as employee_department").
 		Find(&employees)
 
