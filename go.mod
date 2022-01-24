@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/Valiben/gin_unit_test v0.0.0-20181205064931-674aee46d090
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	github.com/joho/godotenv v1.4.0
 	gorm.io/driver/sqlite v1.2.6
