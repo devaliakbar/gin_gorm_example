@@ -79,30 +79,45 @@ func TestDeleteDepartment(t *testing.T) {
 		Data    department.Department `json:"data"`
 	}
 
-	var res resMdl
-
 	///Creating a department for testing delete
-	input := department.CreateDepartmentInput{Name: "Testt"}
+	dep, depErr := createDepartment()
 
-	err := unitTest.TestHandlerUnMarshalResp(utils.POST, "/department", "json", input, &res)
-
-	if err != nil {
-		t.Errorf("Failed to request create department: %v\n", err)
+	if depErr != nil {
+		t.Errorf("Failed to create department: %v\n", depErr)
 		return
 	}
 
 	///Deleting department
 	var delRes resMdl
 
-	err = unitTest.TestHandlerUnMarshalResp(utils.DELETE, fmt.Sprintf("/department/%d", res.Data.ID), "json", nil, &delRes)
+	err := unitTest.TestHandlerUnMarshalResp(utils.DELETE, fmt.Sprintf("/department/%d", dep.ID), "json", nil, &delRes)
 
 	if err != nil {
 		t.Errorf("Failed to request delete employee: %v\n", err)
 		return
 	}
 
-	if delRes.Data.ID != res.Data.ID {
+	if delRes.Data.ID != dep.ID {
 		t.Error("Unexpected department deleted")
 		return
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///**Create Department**///
+///For creating dummy department (might use on other files)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+func createDepartment() (department.Department, error) {
+	type resMdl struct {
+		Success bool                  `json:"success"`
+		Data    department.Department `json:"data"`
+	}
+
+	var depRes resMdl
+
+	depInput := department.CreateDepartmentInput{Name: "Testt"}
+
+	err := unitTest.TestHandlerUnMarshalResp(utils.POST, "/department", "json", depInput, &depRes)
+
+	return depRes.Data, err
 }

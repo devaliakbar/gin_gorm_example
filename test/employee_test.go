@@ -6,7 +6,6 @@ import (
 
 	unitTest "github.com/Valiben/gin_unit_test"
 	"github.com/Valiben/gin_unit_test/utils"
-	"github.com/devaliakbar/gin_gorm_example/internal/features/department"
 	"github.com/devaliakbar/gin_gorm_example/internal/features/employee"
 )
 
@@ -129,24 +128,4 @@ func TestDeleteEmployee(t *testing.T) {
 		t.Error("Unexpected employee deleted")
 		return
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///**Create Department**///
-///For creating dummy department
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-func createDepartment() (department.Department, error) {
-	///Creating Department for create Employee
-	type depResMdl struct {
-		Success bool                  `json:"success"`
-		Data    department.Department `json:"data"`
-	}
-
-	var depRes depResMdl
-
-	depInput := department.CreateDepartmentInput{Name: "Testt"}
-
-	err := unitTest.TestHandlerUnMarshalResp(utils.POST, "/department", "json", depInput, &depRes)
-
-	return depRes.Data, err
 }
